@@ -1,0 +1,10 @@
+package com.collegeportal.repositories;
+
+import com.collegeportal.entities.Comment;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    List<Comment> findByEventIdAndModeratedTrueOrderByCreatedAtDesc(Long eventId);
+}
+
