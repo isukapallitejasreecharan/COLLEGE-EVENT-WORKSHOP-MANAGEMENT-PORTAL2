@@ -36,8 +36,10 @@ springdoc:
 app:
   jwt:
     secret: ${JWT_SECRET:ZmFrZS1kZXZlbG9wbWVudC1zZWNyZXQtbXVzdC1iZS1vdmVycmlkZGVuLWluLXByb2Q=}
-    expiration-minutes: 120
-    refresh-expiration-days: 7
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+    access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:7200000}
+    refresh-expiration-days: ${JWT_REFRESH_EXPIRATION_DAYS:7}
+    refresh-token-expiration-ms: ${JWT_REFRESH_TOKEN_EXPIRATION_MS:604800000}
   frontend-url: ${FRONTEND_URL:http://localhost:5173}
   uploads-dir: ${UPLOADS_DIR:uploads}
   certificate-signatory: ${CERTIFICATE_SIGNATORY:Dean of Student Affairs}

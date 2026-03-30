@@ -26,7 +26,6 @@ import com.collegeportal.security.JwtService;
 import com.collegeportal.security.PortalUserDetails;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -14,8 +14,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username).map(PortalUserDetails::new).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
     public CustomUserDetailsService(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 }
-

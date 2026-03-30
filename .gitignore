@@ -1,1 +1,7 @@
 /.metadata/
+*.log
+backend/target/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.next/
