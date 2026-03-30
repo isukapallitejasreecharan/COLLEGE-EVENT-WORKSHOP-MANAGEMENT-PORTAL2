@@ -31,6 +31,7 @@ docs/      Postman collection and supporting docs
 - In-memory auth rate limiting for `/api/auth/**`
 - Dev profile that runs immediately with H2 in MySQL compatibility mode
 - Prod profile for MySQL + optional Redis cache support
+- Render profile for PostgreSQL deployment without changing the MySQL production config
 
 ### Frontend
 - React + Vite
@@ -73,6 +74,30 @@ The Vite dev server runs on `http://localhost:5173` and proxies `/api` and `/ws`
 
 - Schema: [database/schema.sql](/D:/college-event-portal/database/schema.sql)
 - Seed data: [database/seed.sql](/D:/college-event-portal/database/seed.sql)
+
+## Render PostgreSQL deployment
+
+Use the dedicated `render` Spring profile so the existing `prod` MySQL configuration stays untouched.
+
+Set this environment variable in Render:
+
+```bash
+SPRING_PROFILES_ACTIVE=render
+```
+
+Then choose one of these database configuration options:
+
+```bash
+# Option 1: one URL from Render
+DATABASE_URL=postgresql://user:password@host:5432/database
+
+# Option 2: explicit JDBC settings
+SPRING_DATASOURCE_URL=jdbc:postgresql://host:5432/database
+SPRING_DATASOURCE_USERNAME=user
+SPRING_DATASOURCE_PASSWORD=password
+```
+
+The `render` profile uses PostgreSQL, keeps Hibernate `ddl-auto=update`, and switches cache storage to `simple` so it does not depend on Redis during deployment.
 
 ## Postman
 

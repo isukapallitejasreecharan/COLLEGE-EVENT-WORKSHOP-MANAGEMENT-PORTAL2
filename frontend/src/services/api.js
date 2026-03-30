@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseUrl,
 })
 
 const clearStoredAuth = () => {
@@ -35,7 +37,7 @@ api.interceptors.response.use(
         return Promise.reject(error)
       }
 
-      refreshing ||= axios.post('/api/auth/refresh', { refreshToken })
+      refreshing ||= axios.post(`${apiBaseUrl}/auth/refresh`, { refreshToken })
 
       try {
         const { data } = await refreshing
