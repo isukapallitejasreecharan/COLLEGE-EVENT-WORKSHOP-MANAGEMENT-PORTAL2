@@ -23,6 +23,7 @@ public class AnnouncementService {
     private final SecurityUtils securityUtils;
     private final NotificationService notificationService;
 
+    @Transactional(readOnly = true)
     public List<AnnouncementDto> listActive() {
         return announcementRepository.findByActiveTrueOrderByPublishedAtDesc().stream().map(announcementMapper::toDto).toList();
     }
