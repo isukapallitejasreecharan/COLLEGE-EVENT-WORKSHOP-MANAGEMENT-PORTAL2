@@ -36,10 +36,12 @@ public class UserService {
     private final FileStorageService fileStorageService;
     private final SecurityUtils securityUtils;
 
+    @Transactional(readOnly = true)
     public User getCurrentUserEntity() {
         return securityUtils.getCurrentUser();
     }
 
+    @Transactional(readOnly = true)
     public UserDto getCurrentUser() {
         return userMapper.toDto(securityUtils.getCurrentUser());
     }
@@ -78,6 +80,7 @@ public class UserService {
         return userMapper.toDto(userRepository.save(user));
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<UserDto> listUsers(String query, int page, int size, String sortBy, String direction) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);

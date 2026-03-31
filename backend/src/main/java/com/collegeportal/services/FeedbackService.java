@@ -30,6 +30,7 @@ public class FeedbackService {
         return feedbackMapper.toDto(feedback);
     }
 
+    @Transactional(readOnly = true)
     public List<FeedbackDto> eventFeedback(Long eventId) {
         return feedbackRepository.findByEventIdAndApprovedTrue(eventId).stream().map(feedbackMapper::toDto).toList();
     }

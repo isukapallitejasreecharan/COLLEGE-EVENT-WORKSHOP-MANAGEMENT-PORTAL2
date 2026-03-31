@@ -59,6 +59,7 @@ public class EventService {
     private final AuditService auditService;
     private final SecurityUtils securityUtils;
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "events", key = "#page + \'-\' + #size + \'-\' + #sortBy + \'-\' + #direction + \'-\' + #search + \'-\' + #categoryId + \'-\' + #departmentId + \'-\' + #status")
     public PageResponse<EventDto> listEvents(String search, Long categoryId, Long departmentId, EventStatus status, int page, int size, String sortBy, String direction) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
@@ -84,15 +85,18 @@ public class EventService {
         return PageResponse.<EventDto>builder().content(results.getContent().stream().map(this::toRichDto).toList()).page(results.getNumber()).size(results.getSize()).totalElements(results.getTotalElements()).totalPages(results.getTotalPages()).last(results.isLast()).build();
     }
 
+    @Transactional(readOnly = true)
     public EventDto getEvent(Long id) {
         return toRichDto(fetchEvent(id));
     }
 
+    @Transactional(readOnly = true)
     public List<EventDto> getMyManagedEvents() {
         User currentUser = securityUtils.getCurrentUser();
         return eventRepository.findByOrganizer(currentUser).stream().map(this::toRichDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<EventDto> getCalendar(LocalDate from, LocalDate to) {
         return eventRepository.findByStartDateBetween(from, to).stream().map(this::toRichDto).toList();
     }
@@ -171,11 +175,13 @@ public class EventService {
         return toRichDto(event);
     }
 
+    @Transactional(readOnly = true)
     public List<EventDto> getAssignedVolunteerEvents() {
         User currentUser = securityUtils.getCurrentUser();
         return eventVolunteerRepository.findByVolunteerUserId(currentUser.getId()).stream().map(EventVolunteer::getEvent).distinct().map(this::toRichDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public Event fetchEvent(Long id) {
         return eventRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
     }

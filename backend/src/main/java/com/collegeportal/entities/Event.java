@@ -8,7 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -27,7 +26,6 @@ import java.util.Set;
 public class Event extends BaseEntity {
     @Column(nullable = false, length = 180)
     private String title;
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
     @Column(length = 255)
@@ -70,23 +68,18 @@ public class Event extends BaseEntity {
     private Boolean recurring;
     @Column(length = 120)
     private String recurringRule;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String resources;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String tags;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String faq;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String sponsorsText;
     @Column(length = 255)
     private String materialsUrl;
     @Column(length = 255)
     private String recordingUrl;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String galleryUrls;
     @Column(nullable = false)
