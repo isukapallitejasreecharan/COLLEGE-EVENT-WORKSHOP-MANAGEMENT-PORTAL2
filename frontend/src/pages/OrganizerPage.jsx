@@ -27,6 +27,20 @@ export default function OrganizerPage() {
   const [events, setEvents] = useState([])
   const [form, setForm] = useState(initialForm)
 
+  const validateForm = () => {
+    if (!form.title.trim()) return 'Title is required'
+    if (!form.description.trim()) return 'Description is required'
+    if (!form.startDate) return 'Event date is required'
+    if (!form.registrationDeadline) return 'Registration deadline is required'
+    if (!form.maximumParticipants || form.maximumParticipants < 1) return 'Maximum participants must be at least 1'
+
+    const deadline = new Date(form.registrationDeadline)
+    if (Number.isNaN(deadline.getTime())) return 'Registration deadline is invalid'
+    if (deadline <= new Date()) return 'Registration deadline must be in the future'
+
+    return null
+  }
+
   const loadEvents = () => eventService.mine()
     .then(({ data }) => setEvents(data.data || []))
     .catch((error) => {
@@ -38,6 +52,12 @@ export default function OrganizerPage() {
 
   const createEvent = async (event) => {
     event.preventDefault()
+    const validationError = validateForm()
+    if (validationError) {
+      toast.error(validationError)
+      return
+    }
+
     try {
       await eventService.create(form)
       toast.success('Event created')
@@ -54,17 +74,17 @@ export default function OrganizerPage() {
         <p className="text-sm uppercase tracking-[0.4em] text-orange-500">Organizer hub</p>
         <h2 className="mt-3 text-3xl font-bold">Create an event</h2>
         <div className="mt-6 space-y-3">
-          <input className="w-full rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          <textarea className="h-32 w-full rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <input className="w-full rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+          <textarea className="h-32 w-full rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
           <div className="grid gap-3 sm:grid-cols-2">
-            <input type="date" className="rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value, endDate: e.target.value })} />
-            <input type="datetime-local" className="rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.registrationDeadline} onChange={(e) => setForm({ ...form, registrationDeadline: e.target.value })} />
+            <input type="date" className="rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value, endDate: e.target.value })} required />
+            <input type="datetime-local" className="rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.registrationDeadline} onChange={(e) => setForm({ ...form, registrationDeadline: e.target.value })} required />
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <input type="time" className="rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} />
             <input type="time" className="rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} />
           </div>
-          <input type="number" className="w-full rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.maximumParticipants} onChange={(e) => setForm({ ...form, maximumParticipants: Number(e.target.value) })} />
+          <input type="number" min="1" className="w-full rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-700 dark:bg-slate-800" value={form.maximumParticipants} onChange={(e) => setForm({ ...form, maximumParticipants: Number(e.target.value) })} required />
           <button className="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white dark:bg-orange-500">Create event</button>
         </div>
       </form>
