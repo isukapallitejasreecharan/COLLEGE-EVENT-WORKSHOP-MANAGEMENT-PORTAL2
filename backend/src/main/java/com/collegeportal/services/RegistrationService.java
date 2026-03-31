@@ -60,11 +60,13 @@ public class RegistrationService {
         return registrationMapper.toDto(registrationRepository.save(registration));
     }
 
+    @Transactional(readOnly = true)
     public List<RegistrationDto> myRegistrations() {
         User user = securityUtils.getCurrentUser();
         return registrationRepository.findByUserIdOrderByRegistrationDateDesc(user.getId()).stream().map(registrationMapper::toDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<RegistrationDto> participants(Long eventId) {
         return registrationRepository.findByEventIdOrderByRegistrationDateDesc(eventId).stream().map(registrationMapper::toDto).toList();
     }
@@ -87,6 +89,7 @@ public class RegistrationService {
         return registrationMapper.toDto(registrationRepository.save(registration));
     }
 
+    @Transactional(readOnly = true)
     public String exportParticipantsCsv(Long eventId) {
         StringBuilder builder = new StringBuilder("Name,Email,Status,Registered At\n");
         registrationRepository.findByEventIdOrderByRegistrationDateDesc(eventId).forEach(registration -> builder.append(registration.getUser().getFullName()).append(',').append(registration.getUser().getEmail()).append(',').append(registration.getStatus()).append(',').append(registration.getRegistrationDate()).append('\n'));

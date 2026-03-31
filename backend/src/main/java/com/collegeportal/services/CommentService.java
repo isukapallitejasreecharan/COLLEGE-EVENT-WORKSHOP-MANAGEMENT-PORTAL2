@@ -27,6 +27,7 @@ public class CommentService {
         return commentMapper.toDto(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentDto> eventComments(Long eventId) {
         return commentRepository.findByEventIdAndModeratedTrueOrderByCreatedAtDesc(eventId).stream().map(commentMapper::toDto).toList();
     }
